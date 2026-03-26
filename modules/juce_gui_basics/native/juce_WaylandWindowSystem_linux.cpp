@@ -3,6 +3,15 @@
 
    This file is part of the JUCE framework.
 
+   Copyright (c) 2026 by Ian McKellar
+
+   You may use this under the terms of the GNU AGPLv3 or later:
+   https://www.gnu.org/licenses/agpl-3.0.en.html
+
+   THE JUCE FRAMEWORK IS PROVIDED "AS IS" WITHOUT ANY WARRANTY, AND ALL
+   WARRANTIES, WHETHER EXPRESSED OR IMPLIED, INCLUDING WARRANTY OF
+   MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE, ARE DISCLAIMED.
+
   ==============================================================================
 */
 
