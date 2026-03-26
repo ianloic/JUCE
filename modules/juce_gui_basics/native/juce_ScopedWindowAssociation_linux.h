@@ -34,6 +34,7 @@
 
 namespace juce
 {
+#if ! JUCE_USE_WAYLAND
 
 extern XContext windowHandleXContext;
 
@@ -123,5 +124,15 @@ private:
     void* associatedPointer = nullptr;
     XID window{};
 };
+
+#else
+class ScopedWindowAssociation
+{
+public:
+    ScopedWindowAssociation() = default;
+    ScopedWindowAssociation (void*, void*) {}
+    bool isValid() const { return false; }
+};
+#endif
 
 } // namespace juce

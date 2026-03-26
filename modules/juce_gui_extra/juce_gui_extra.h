@@ -72,7 +72,10 @@
     This lets you disable the WebBrowserComponent class.
     If you're not using any embedded web-pages, turning this off may reduce your code size.
 */
-#ifndef JUCE_WEB_BROWSER
+#if JUCE_USE_WAYLAND
+ #undef JUCE_WEB_BROWSER
+ #define JUCE_WEB_BROWSER 0
+#elif !defined(JUCE_WEB_BROWSER)
  #define JUCE_WEB_BROWSER 1
 #endif
 
@@ -142,7 +145,9 @@
 #include "embedding/juce_AndroidViewComponent.h"
 #include "embedding/juce_NSViewComponent.h"
 #include "embedding/juce_UIViewComponent.h"
-#include "embedding/juce_XEmbedComponent.h"
+#if ! JUCE_USE_WAYLAND
+ #include "embedding/juce_XEmbedComponent.h"
+#endif
 #include "embedding/juce_HWNDComponent.h"
 #include "misc/juce_AppleRemote.h"
 #include "misc/juce_BubbleMessageComponent.h"

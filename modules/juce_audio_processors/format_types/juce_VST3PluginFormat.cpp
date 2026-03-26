@@ -265,7 +265,7 @@ struct VST3PluginWindow final : public AudioProcessorEditor,
         if (scaleInterface != nullptr)
             scaleInterface->release();
 
-        #if JUCE_LINUX || JUCE_BSD
+        #if (JUCE_LINUX || JUCE_BSD) && ! JUCE_USE_WAYLAND
          embeddedComponent.removeClient();
         #endif
 
@@ -287,7 +287,7 @@ struct VST3PluginWindow final : public AudioProcessorEditor,
     {
         return testForMultiple (*this,
                                 queryIid,
-                               #if JUCE_LINUX || JUCE_BSD
+                               #if (JUCE_LINUX || JUCE_BSD) && ! JUCE_USE_WAYLAND
                                 UniqueBase<Linux::IRunLoop>{},
                                #endif
                                 UniqueBase<IPlugFrame>{}).extract (obj);
@@ -425,7 +425,7 @@ private:
 
            #if JUCE_WINDOWS
             embeddedComponent.updateHWNDBounds();
-           #elif JUCE_LINUX || JUCE_BSD
+           #elif (JUCE_LINUX || JUCE_BSD) && ! JUCE_USE_WAYLAND
             embeddedComponent.updateEmbeddedBounds();
            #endif
 
@@ -470,7 +470,7 @@ private:
 
             #if JUCE_MAC
              pluginHandle = (HandleFormat) embeddedComponent.getView();
-            #elif JUCE_LINUX || JUCE_BSD
+            #elif (JUCE_LINUX || JUCE_BSD) && ! JUCE_USE_WAYLAND
              pluginHandle = (HandleFormat) embeddedComponent.getHostWindowID();
             #endif
 
@@ -562,7 +562,7 @@ private:
    #elif JUCE_MAC
     NSViewComponentWithParent embeddedComponent;
     using HandleFormat = NSView*;
-   #elif JUCE_LINUX || JUCE_BSD
+   #elif (JUCE_LINUX || JUCE_BSD) && ! JUCE_USE_WAYLAND
     XEmbedComponent embeddedComponent { true, false };
     using HandleFormat = Window;
    #else
@@ -593,7 +593,7 @@ private:
 
                    #if JUCE_WINDOWS
                     r->embeddedComponent.updateHWNDBounds();
-                   #elif JUCE_LINUX || JUCE_BSD
+                   #elif (JUCE_LINUX || JUCE_BSD) && ! JUCE_USE_WAYLAND
                     r->embeddedComponent.updateEmbeddedBounds();
                    #endif
                 }

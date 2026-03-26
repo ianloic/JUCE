@@ -193,6 +193,7 @@
  JUCE_BEGIN_IGNORE_WARNINGS_GCC_LIKE ("-Wzero-as-null-pointer-constant")
 
  #include <juce_gui_basics/native/juce_ScopedWindowAssociation_linux.h>
+ #if ! JUCE_USE_WAYLAND
  #include "native/juce_XEmbedComponent_linux.cpp"
 
  #if JUCE_WEB_BROWSER
@@ -201,6 +202,7 @@
   #endif
 
   #include "native/juce_WebBrowserComponent_linux.cpp"
+ #endif
  #endif
 
  JUCE_END_IGNORE_WARNINGS_GCC_LIKE

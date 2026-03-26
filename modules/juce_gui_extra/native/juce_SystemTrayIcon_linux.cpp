@@ -35,6 +35,7 @@
 namespace juce
 {
 
+#if ! JUCE_USE_WAYLAND
 class SystemTrayIconComponent::Pimpl
 {
 public:
@@ -156,5 +157,15 @@ void* SystemTrayIconComponent::getNativeHandle() const
 {
     return getWindowHandle();
 }
+#else
+class SystemTrayIconComponent::Pimpl {};
+void SystemTrayIconComponent::setIconImage (const Image&, const Image&) {}
+void SystemTrayIconComponent::paint (Graphics&) {}
+void SystemTrayIconComponent::setIconTooltip (const String&) {}
+void SystemTrayIconComponent::setHighlighted (bool) {}
+void SystemTrayIconComponent::showInfoBubble (const String&, const String&) {}
+void SystemTrayIconComponent::hideInfoBubble() {}
+void* SystemTrayIconComponent::getNativeHandle() const { return nullptr; }
+#endif
 
 } // namespace juce

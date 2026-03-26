@@ -227,21 +227,28 @@
  #include "native/juce_FileChooser_windows.cpp"
 
 #elif JUCE_LINUX || JUCE_BSD
- #include "native/juce_XSymbols_linux.cpp"
- #include "native/juce_DragAndDrop_linux.cpp"
+ #if JUCE_USE_WAYLAND
+  // No Wayland symbol loaders required yet
+  #include "native/juce_WaylandWindowSystem_linux.cpp"
+  #include "native/juce_WindowUtils_linux.cpp"
+  #include "native/juce_NativeMessageBox_linux.cpp"
+  #include "native/juce_FileChooser_linux.cpp"
+ #else
+  #include "native/juce_XSymbols_linux.cpp"
+  #include "native/juce_DragAndDrop_linux.cpp"
 
- JUCE_BEGIN_IGNORE_WARNINGS_GCC_LIKE ("-Wzero-as-null-pointer-constant")
+  JUCE_BEGIN_IGNORE_WARNINGS_GCC_LIKE ("-Wzero-as-null-pointer-constant")
 
- #include "native/juce_ScopedWindowAssociation_linux.h"
- #include "native/juce_WindowUtils_linux.cpp"
- #include "native/juce_Windowing_linux.cpp"
- #include "native/juce_NativeMessageBox_linux.cpp"
- #include "native/juce_XWindowSystem_linux.cpp"
+  #include "native/juce_ScopedWindowAssociation_linux.h"
+  #include "native/juce_WindowUtils_linux.cpp"
+  #include "native/juce_Windowing_linux.cpp"
+  #include "native/juce_NativeMessageBox_linux.cpp"
+  #include "native/juce_XWindowSystem_linux.cpp"
 
- JUCE_END_IGNORE_WARNINGS_GCC_LIKE
+  JUCE_END_IGNORE_WARNINGS_GCC_LIKE
 
- #include "native/juce_FileChooser_linux.cpp"
-
+  #include "native/juce_FileChooser_linux.cpp"
+ #endif
 #elif JUCE_ANDROID
 
  #include "juce_core/files/juce_common_MimeTypes.h"

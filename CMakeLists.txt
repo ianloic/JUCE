@@ -61,6 +61,11 @@ cmake_dependent_option(JUCE_ENABLE_MODULE_SOURCE_GROUPS
     "Show all module sources in IDE projects" OFF
     "NOT JUCE_MODULES_ONLY" OFF)
 
+option(JUCE_USE_WAYLAND "Build with Wayland support instead of X11" OFF)
+if(JUCE_USE_WAYLAND)
+    add_compile_definitions(JUCE_USE_WAYLAND=1)
+endif()
+
 add_subdirectory(modules)
 
 if(JUCE_MODULES_ONLY)

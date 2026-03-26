@@ -114,6 +114,13 @@
  #define JUCE_USE_XRENDER 0
 #endif
 
+/** Config: JUCE_USE_WAYLAND
+    Enables Wayland support for Linux windowing.
+*/
+#ifndef JUCE_USE_WAYLAND
+ #define JUCE_USE_WAYLAND 0
+#endif
+
 /** Config: JUCE_USE_XCURSOR
     Uses XCursor to allow ARGB cursor on Linux. This is best left turned on unless you have
     a good reason to disable it.
@@ -343,9 +350,18 @@ namespace juce
 
 #if JUCE_LINUX || JUCE_BSD
  #if JUCE_GUI_BASICS_INCLUDE_XHEADERS
-  // If you're missing these headers, you need to install the libx11-dev package
-  JUCE_BEGIN_IGNORE_WARNINGS_GCC_LIKE ("-Wvariadic-macros")
-  #include <X11/Xlib.h>
+  #if JUCE_USE_WAYLAND
+   #include <wayland-client.h>
+   #include <wayland-cursor.h>
+   #include <wayland-egl.h>
+   #include <xkbcommon/xkbcommon.h>
+   #include <sys/mman.h>
+   #include <fcntl.h>
+   #include <unistd.h>
+  #else
+   // If you're missing these headers, you need to install the libx11-dev package
+   JUCE_BEGIN_IGNORE_WARNINGS_GCC_LIKE ("-Wvariadic-macros")
+   #include <X11/Xlib.h>
   JUCE_END_IGNORE_WARNINGS_GCC_LIKE
   #include <X11/Xatom.h>
   #include <X11/Xresource.h>
@@ -388,6 +404,7 @@ namespace juce
 
   #include "native/juce_XWindowSystem_linux.h"
   #include "native/juce_XSymbols_linux.h"
+ #endif
  #endif
 #endif
 

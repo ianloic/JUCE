@@ -57,3 +57,10 @@ juce_add_modules(
     juce_osc
     juce_product_unlocking
     juce_video)
+
+if(JUCE_USE_WAYLAND AND TARGET juce_gui_basics)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(WAYLAND REQUIRED wayland-client wayland-cursor wayland-egl xkbcommon)
+    target_link_libraries(juce_gui_basics INTERFACE ${WAYLAND_LDFLAGS})
+    target_compile_options(juce_gui_basics INTERFACE ${WAYLAND_CFLAGS})
+endif()

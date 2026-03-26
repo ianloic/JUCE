@@ -810,7 +810,13 @@ bool DragAndDropContainer::performExternalDragDropOfFiles (const StringArray& fi
         return false;
 
     if (auto* peer = getPeerForDragEvent (sourceComp))
+    {
+       #if ! JUCE_USE_WAYLAND
         return XWindowSystem::getInstance()->externalDragFileInit (peer, files, canMoveFiles, std::move (callback));
+       #else
+        return false;
+       #endif
+    }
 
     // This method must be called in response to a component's mouseDown or mouseDrag event!
     jassertfalse;
@@ -824,7 +830,13 @@ bool DragAndDropContainer::performExternalDragDropOfText (const String& text, Co
         return false;
 
     if (auto* peer = getPeerForDragEvent (sourceComp))
+    {
+       #if ! JUCE_USE_WAYLAND
         return XWindowSystem::getInstance()->externalDragTextInit (peer, text, std::move (callback));
+       #else
+        return false;
+       #endif
+    }
 
     // This method must be called in response to a component's mouseDown or mouseDrag event!
     jassertfalse;
@@ -834,18 +846,31 @@ bool DragAndDropContainer::performExternalDragDropOfText (const String& text, Co
 //==============================================================================
 void SystemClipboard::copyTextToClipboard (const String& clipText)
 {
+   #if ! JUCE_USE_WAYLAND
     XWindowSystem::getInstance()->copyTextToClipboard (clipText);
+   #else
+    ignoreUnused (clipText);
+   #endif
 }
 
 String SystemClipboard::getTextFromClipboard()
 {
+   #if ! JUCE_USE_WAYLAND
     return XWindowSystem::getInstance()->getTextFromClipboard();
+   #else
+    return {};
+   #endif
 }
 
 //==============================================================================
 bool KeyPress::isKeyCurrentlyDown (int keyCode)
 {
+   #if ! JUCE_USE_WAYLAND
     return XWindowSystem::getInstance()->isKeyCurrentlyDown (keyCode);
+   #else
+    ignoreUnused (keyCode);
+    return false;
+   #endif
 }
 
 void LookAndFeel::playAlertSound()

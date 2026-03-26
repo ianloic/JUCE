@@ -130,7 +130,11 @@ void* OpenGLHelpers::getExtensionFunction (const char* functionName)
    #if JUCE_WINDOWS
     return (void*) wglGetProcAddress (functionName);
    #elif JUCE_LINUX || JUCE_BSD
-    return (void*) glXGetProcAddress ((const GLubyte*) functionName);
+    #if JUCE_USE_WAYLAND
+     return (void*) eglGetProcAddress (functionName);
+    #else
+     return (void*) glXGetProcAddress ((const GLubyte*) functionName);
+    #endif
    #else
     static void* handle = dlopen (nullptr, RTLD_LAZY);
     return dlsym (handle, functionName);

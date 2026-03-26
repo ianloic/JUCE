@@ -216,7 +216,7 @@ public:
        #if JUCE_MAC
         const auto frame = [(NSView*) widget frame];
         return { (int) frame.size.width, (int) frame.size.height };
-       #elif JUCE_LINUX || JUCE_BSD
+       #elif (JUCE_LINUX || JUCE_BSD) && ! JUCE_USE_WAYLAND
         Window root = 0;
         int wx = 0, wy = 0;
         unsigned int ww = 0, wh = 0, bw = 0, bitDepth = 0;
@@ -558,7 +558,7 @@ private:
 
     // If possible, try to keep platform-specific handing restricted to the implementation of
     // ViewComponent. Keep the interface of ViewComponent consistent on all platforms.
-   #if JUCE_LINUX || JUCE_BSD
+   #if (JUCE_LINUX || JUCE_BSD) && ! JUCE_USE_WAYLAND
     struct InnerHolder
     {
         struct Inner final : public XEmbedComponent

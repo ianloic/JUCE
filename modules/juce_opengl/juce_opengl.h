@@ -69,7 +69,7 @@
 #undef JUCE_OPENGL
 #define JUCE_OPENGL 1
 
-#if JUCE_IOS || JUCE_ANDROID
+#if JUCE_IOS || JUCE_ANDROID || JUCE_USE_WAYLAND
  #define JUCE_OPENGL_ES 1
  #include "opengl/juce_gles2.h"
 #else
