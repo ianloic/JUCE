@@ -142,10 +142,16 @@ void TopLevelWindow::setDropShadowEnabled (const bool useShadow)
 
 void TopLevelWindow::setUsingNativeTitleBar (const bool shouldUseNativeTitleBar)
 {
-    if (useNativeTitleBar != shouldUseNativeTitleBar)
+   #if JUCE_USE_WAYLAND
+    const bool actualValue = false;
+   #else
+    const bool actualValue = shouldUseNativeTitleBar;
+   #endif
+
+    if (useNativeTitleBar != actualValue)
     {
         detail::FocusRestorer focusRestorer;
-        useNativeTitleBar = shouldUseNativeTitleBar;
+        useNativeTitleBar = actualValue;
         recreateDesktopWindow();
         sendLookAndFeelChange();
     }
