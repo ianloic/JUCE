@@ -1,0 +1,90 @@
+[  0%] Generating DemoRunner_artefacts/JuceLibraryCode/JuceHeader.h
+[  0%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_audio_basics/juce_audio_basics.cpp.o
+[  0%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/Source/Demos/DemoPIPs2.cpp.o
+[  0%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/Source/Demos/JUCEDemos.cpp.o
+[  0%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/Source/Demos/DemoPIPs1.cpp.o
+[ 50%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_audio_processors/juce_audio_processors.cpp.o
+[ 50%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_audio_formats/juce_audio_formats.cpp.o
+[ 50%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/extras/Build/juce_build_tools/juce_build_tools.cpp.o
+[ 50%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/Source/Main.cpp.o
+[ 50%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/Source/UI/DemoContentComponent.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/Source/UI/MainComponent.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_analytics/juce_analytics.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_audio_processors_headless/juce_audio_processors_headless.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_animation/juce_animation.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_audio_devices/juce_audio_devices.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_audio_processors_headless/juce_audio_processors_headless_lv2_libs.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_audio_processors_headless/juce_audio_processors_headless_ara.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_core/juce_core_CompilationTime.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_box2d/juce_box2d.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_audio_utils/juce_audio_utils.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_core/juce_core.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_cryptography/juce_cryptography.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_dsp/juce_dsp.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_events/juce_events.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_data_structures/juce_data_structures.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_graphics/juce_graphics_Harfbuzz.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_graphics/juce_graphics.cpp.o
+[100%] Building C object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_graphics/juce_graphics_Sheenbidi.c.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_gui_basics/juce_gui_basics.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_gui_extra/juce_gui_extra.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_javascript/juce_javascript.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_midi_ci/juce_midi_ci.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_opengl/juce_opengl.cpp.o
+In file included from /home/ian/Projects/juce-wayland/JUCE/modules/juce_gui_basics/native/juce_WaylandWindowSystem_linux.cpp:20,
+                 from /home/ian/Projects/juce-wayland/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp:232:
+/home/ian/Projects/juce-wayland/JUCE/modules/juce_gui_basics/native/xdg-shell-protocol.c:94:38: warning: ‘visibility’ attribute ignored [-Wattributes]
+   94 | WL_PRIVATE const struct wl_interface xdg_wm_base_interface = {
+      |                                      ^~~~~~~~~~~~~~~~~~~~~
+/home/ian/Projects/juce-wayland/JUCE/modules/juce_gui_basics/native/xdg-shell-protocol.c:113:38: warning: ‘visibility’ attribute ignored [-Wattributes]
+  113 | WL_PRIVATE const struct wl_interface xdg_positioner_interface = {
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~
+/home/ian/Projects/juce-wayland/JUCE/modules/juce_gui_basics/native/xdg-shell-protocol.c:131:38: warning: ‘visibility’ attribute ignored [-Wattributes]
+  131 | WL_PRIVATE const struct wl_interface xdg_surface_interface = {
+      |                                      ^~~~~~~~~~~~~~~~~~~~~
+/home/ian/Projects/juce-wayland/JUCE/modules/juce_gui_basics/native/xdg-shell-protocol.c:161:38: warning: ‘visibility’ attribute ignored [-Wattributes]
+  161 | WL_PRIVATE const struct wl_interface xdg_toplevel_interface = {
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~
+/home/ian/Projects/juce-wayland/JUCE/modules/juce_gui_basics/native/xdg-shell-protocol.c:179:38: warning: ‘visibility’ attribute ignored [-Wattributes]
+  179 | WL_PRIVATE const struct wl_interface xdg_popup_interface = {
+      |                                      ^~~~~~~~~~~~~~~~~~~
+In file included from /home/ian/Projects/juce-wayland/JUCE/modules/juce_gui_basics/juce_gui_basics.h:309,
+                 from /home/ian/Projects/juce-wayland/JUCE/modules/juce_gui_basics/juce_gui_basics.cpp:55:
+/home/ian/Projects/juce-wayland/JUCE/modules/juce_gui_basics/windows/juce_ComponentPeer.h:228:28: warning: ‘virtual juce::Rectangle<int> juce::ComponentPeer::globalToLocal(const juce::Rectangle<int>&)’ was hidden [-Woverloaded-virtual=]
+  228 |     virtual Rectangle<int> globalToLocal (const Rectangle<int>& screenPosition);
+      |                            ^~~~~~~~~~~~~
+/home/ian/Projects/juce-wayland/JUCE/modules/juce_gui_basics/native/juce_WaylandWindowSystem_linux.cpp:172:18: note:   by ‘virtual juce::Point<float> juce::WaylandComponentPeer::globalToLocal(juce::Point<float>)’
+  172 |     Point<float> globalToLocal (Point<float> screenPosition) override { return screenPosition; }
+      |                  ^~~~~~~~~~~~~
+/home/ian/Projects/juce-wayland/JUCE/modules/juce_gui_basics/windows/juce_ComponentPeer.h:225:28: warning: ‘virtual juce::Rectangle<int> juce::ComponentPeer::localToGlobal(const juce::Rectangle<int>&)’ was hidden [-Woverloaded-virtual=]
+  225 |     virtual Rectangle<int> localToGlobal (const Rectangle<int>& relativePosition);
+      |                            ^~~~~~~~~~~~~
+/home/ian/Projects/juce-wayland/JUCE/modules/juce_gui_basics/native/juce_WaylandWindowSystem_linux.cpp:171:18: note:   by ‘virtual juce::Point<float> juce::WaylandComponentPeer::localToGlobal(juce::Point<float>)’
+  171 |     Point<float> localToGlobal (Point<float> relativePosition) override { return relativePosition; }
+      |                  ^~~~~~~~~~~~~
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_osc/juce_osc.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_product_unlocking/juce_product_unlocking.cpp.o
+[100%] Building CXX object examples/DemoRunner/CMakeFiles/DemoRunner.dir/__/__/modules/juce_video/juce_video.cpp.o
+In file included from /home/ian/Projects/juce-wayland/JUCE/modules/juce_opengl/juce_opengl.cpp:255:
+/home/ian/Projects/juce-wayland/JUCE/modules/juce_opengl/opengl/juce_OpenGLFrameBuffer.cpp: In constructor ‘juce::OpenGLFrameBuffer::Pimpl::TransientState::TransientState(int, int, bool, bool)’:
+/home/ian/Projects/juce-wayland/JUCE/modules/juce_opengl/opengl/juce_OpenGLFrameBuffer.cpp:339:39: warning: the address of ‘void glGenFramebuffers(GLsizei, GLuint*)’ will never be NULL [-Waddress]
+  339 |             if (gl::glGenFramebuffers == nullptr)
+      |                 ~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
+In file included from /home/ian/Projects/juce-wayland/JUCE/modules/juce_opengl/juce_opengl.cpp:74:
+/home/ian/Projects/juce-wayland/JUCE/modules/juce_opengl/opengl/juce_gles2.cpp:111:22: note: ‘void glGenFramebuffers(GLsizei, GLuint*)’ declared here
+  111 |     X (void        , glGenFramebuffers, (GLsizei n, GLuint *framebuffers)) \
+      |                      ^~~~~~~~~~~~~~~~~
+/home/ian/Projects/juce-wayland/JUCE/modules/juce_opengl/opengl/juce_gles2.cpp:1418:57: note: in definition of macro ‘X’
+ 1418 |     extern "C" KHRONOS_APICALL returns KHRONOS_APIENTRY name params; \
+      |                                                         ^~~~
+/home/ian/Projects/juce-wayland/JUCE/modules/juce_opengl/opengl/juce_gles2.cpp:1240:53: note: in expansion of macro ‘JUCE_GL_FUNCTIONS_GL_ES_VERSION_2_0’
+ 1240 |  #define JUCE_GL_FUNCTIONS_GL_ES_VERSION_2_0_STATIC JUCE_GL_FUNCTIONS_GL_ES_VERSION_2_0
+      |                                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/ian/Projects/juce-wayland/JUCE/modules/juce_opengl/opengl/juce_gles2.cpp:1273:5: note: in expansion of macro ‘JUCE_GL_FUNCTIONS_GL_ES_VERSION_2_0_STATIC’
+ 1273 |     JUCE_GL_FUNCTIONS_GL_ES_VERSION_2_0_STATIC \
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/ian/Projects/juce-wayland/JUCE/modules/juce_opengl/opengl/juce_gles2.cpp:1420:1: note: in expansion of macro ‘JUCE_STATIC_GL_FUNCTIONS’
+ 1420 | JUCE_STATIC_GL_FUNCTIONS
+      | ^~~~~~~~~~~~~~~~~~~~~~~~
+[100%] Linking CXX executable DemoRunner_artefacts/Debug/DemoRunner
+[100%] Built target DemoRunner

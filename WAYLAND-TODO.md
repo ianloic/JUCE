@@ -2,17 +2,17 @@
 
 This document outlines the pending steps to transition the experimental Wayland connection into a fully functional graphical backend for JUCE on Linux.
 
-## 1. Window Rendering
-Currently, the `WaylandComponentPeer` maps a basic `xdg_surface` and attaches a static red `wl_shm` buffer. To render actual UI components:
-* **Software Rendering Pipeline**: During `ComponentPeer::repaint()`, invoke JUCE's software renderer to draw the component hierarchy into a `juce::Image`. Copy the `juce::Image` ARGB pixels into the memory-mapped anonymous file representing the `wl_shm_pool` buffer, then submit via `wl_surface_damage_buffer` and `wl_surface_commit`.
-* **Buffer Management**: Implement double-buffering or a circular pool of `wl_shm` buffers to prevent overwriting a frame that the compositor is currently reading. Wait for `wl_buffer::release` events before reusing memory.
-* **OpenGL / EGL Contexts**: For hardware-accelerated components, properly implement `OpenGLContext::NativeContext`. Initialize EGL, create a `wl_egl_window` using the `wl_surface`, and bind an `eglCreateWindowSurface()`.
+## ~~1. Window Rendering~~ (Completed)
+~~Currently, the `WaylandComponentPeer` maps a basic `xdg_surface` and attaches a static red `wl_shm` buffer. To render actual UI components:~~
+* ~~**Software Rendering Pipeline**: During `ComponentPeer::repaint()`, invoke JUCE's software renderer to draw the component hierarchy into a `juce::Image`. Copy the `juce::Image` ARGB pixels into the memory-mapped anonymous file representing the `wl_shm_pool` buffer, then submit via `wl_surface_damage_buffer` and `wl_surface_commit`.~~
+* ~~**Buffer Management**: Implement double-buffering or a circular pool of `wl_shm` buffers to prevent overwriting a frame that the compositor is currently reading. Wait for `wl_buffer::release` events before reusing memory.~~
+* ~~**OpenGL / EGL Contexts**: For hardware-accelerated components, properly implement `OpenGLContext::NativeContext`. Initialize EGL, create a `wl_egl_window` using the `wl_surface`, and bind an `eglCreateWindowSurface()`.~~
 
-## 2. Input Handling (`wl_seat`)
-The `wl_seat` global provides access to input peripherals.
-* **Pointer Events (`wl_pointer`)**: Add listeners for `enter`, `leave`, `motion`, `button`, and `axis` events. Map coordinate data to JUCE's `MouseInputSource` and dispatch events to the component framework via `handleMouseEvent()`.
-* **Keyboard Events (`wl_keyboard`)**: Utilize `libxkbcommon` to decode the `keymap` event file descriptor provided by the compositor. Translate Wayland keycodes into JUCE key presses and modifiers, then dispatch via `handleKeyPress()` and `handleModifierKeysChange()`.
-* **Focus Management**: Track pointer focus and keyboard focus as surfaces emit `enter` and `leave` events.
+## ~~2. Input Handling (`wl_seat`)~~ (Completed)
+~~The `wl_seat` global provides access to input peripherals.~~
+* ~~**Pointer Events (`wl_pointer`)**: Add listeners for `enter`, `leave`, `motion`, `button`, and `axis` events. Map coordinate data to JUCE's `MouseInputSource` and dispatch events to the component framework via `handleMouseEvent()`.~~
+* ~~**Keyboard Events (`wl_keyboard`)**: Utilize `libxkbcommon` to decode the `keymap` event file descriptor provided by the compositor. Translate Wayland keycodes into JUCE key presses and modifiers, then dispatch via `handleKeyPress()` and `handleModifierKeysChange()`.~~
+* ~~**Focus Management**: Track pointer focus and keyboard focus as surfaces emit `enter` and `leave` events.~~
 
 ## 3. Window Sizing and State Management
 * **Dynamic Resizing**: The `xdg_toplevel::configure` event dictates window sizing from the compositor (e.g., maximizing or tiling). `WaylandComponentPeer` must respond by resizing its JUCE `Component` bounds, allocating a new `wl_shm` buffer of the correct dimensions, and acknowledging the configure serial before committing the new buffer.
