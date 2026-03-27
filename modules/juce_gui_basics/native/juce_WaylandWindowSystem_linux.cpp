@@ -182,6 +182,9 @@ public:
 
       wl_surface_commit(surface);
       wl_display_flush(wd->display);
+      
+      auto frequency = Desktop::getInstance().getDisplays().getMainDisplay().verticalFrequencyHz.value_or(60.0);
+      vBlankManager.startTimerHz(frequency > 0.0 ? roundToInt(frequency) : 60);
     }
   }
 
@@ -241,6 +244,11 @@ public:
   }
 
   void handleAsyncUpdate() override { performAnyPendingRepaintsNow(); }
+
+  void onVBlank() {
+      double timestampSec = Time::getMillisecondCounterHiRes() / 1000.0;
+      callVBlankListeners(timestampSec);
+  }
 
   void performAnyPendingRepaintsNow() override {
     if (!configured || bounds.isEmpty() ||
@@ -335,6 +343,8 @@ private:
   xdg_surface *xdgSurface = nullptr;
   xdg_toplevel *xdgToplevel = nullptr;
   wl_buffer *buffer = nullptr;
+
+  TimedCallback vBlankManager { [this]() { onVBlank(); } };
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WaylandComponentPeer)
 };
