@@ -14,10 +14,11 @@ This document outlines the pending steps to transition the experimental Wayland 
 * ~~**Keyboard Events (`wl_keyboard`)**: Utilize `libxkbcommon` to decode the `keymap` event file descriptor provided by the compositor. Translate Wayland keycodes into JUCE key presses and modifiers, then dispatch via `handleKeyPress()` and `handleModifierKeysChange()`.~~
 * ~~**Focus Management**: Track pointer focus and keyboard focus as surfaces emit `enter` and `leave` events.~~
 
-## 3. Window Sizing and State Management
-* **Dynamic Resizing**: The `xdg_toplevel::configure` event dictates window sizing from the compositor (e.g., maximizing or tiling). `WaylandComponentPeer` must respond by resizing its JUCE `Component` bounds, allocating a new `wl_shm` buffer of the correct dimensions, and acknowledging the configure serial before committing the new buffer.
-* **Window Properties**: Expose JUCE window controls to Wayland via `xdg_toplevel_set_title`, `xdg_toplevel_set_app_id`, `xdg_toplevel_set_fullscreen`, `xdg_toplevel_set_maximized`, and `xdg_toplevel_set_minimized`.
-* **Window Hierarchy**: Support popups (menus, dropdowns, tooltips) by creating `xdg_popup` surfaces parented to the main `xdg_toplevel`.
+## ~~3. Window Sizing and State Management~~ (Completed)
+* ~~**Dynamic Resizing**: The `xdg_toplevel::configure` event dictates window sizing from the compositor (e.g., maximizing or tiling). `WaylandComponentPeer` must respond by resizing its JUCE `Component` bounds, allocating a new `wl_shm` buffer of the correct dimensions, and acknowledging the configure serial before committing the new buffer.~~
+* ~~**Window Properties**: Expose JUCE window controls to Wayland via `xdg_toplevel_set_title`, `xdg_toplevel_set_app_id`, `xdg_toplevel_set_fullscreen`, `xdg_toplevel_set_maximized`, and `xdg_toplevel_set_minimized`.~~
+* ~~**Window Hierarchy**: Support popups (menus, dropdowns, tooltips) by creating `xdg_popup` surfaces parented to the main `xdg_toplevel`.~~
+* ~~**Interactive Drag and Resize**: Hooked into `startHostManagedMove` and `startHostManagedResize` to dispatch `xdg_toplevel_move` and `xdg_toplevel_resize` server interactions via the Wayland socket.~~
 
 ## 4. Multi-Monitor and HiDPI (`wl_output`)
 * **Display Enumeration**: Add a `wl_output` listener to the global registry to detect connected monitors.
@@ -27,6 +28,7 @@ This document outlines the pending steps to transition the experimental Wayland 
 ## 5. Pointer Cursors
 * **Themes and Rendering**: Bind `wayland-cursor` to load the system cursor theme.
 * **Cursor Control**: When a JUCE component requests a custom cursor type, look up the appropriate cursor buffer from the theme and attach it using `wl_pointer_set_cursor()`.
+* **Interactive Handlers**: Ensure correct cursor theme swaps (e.g. `left_ptr`, `grabbing`, `top_left_corner`) when the user hovers over window margins, title bars, and drag corners before initializing drag grabs.
 
 ## 6. Clipboard and Drag & Drop
 * **Data Device Integration**: Bind to `wl_data_device_manager`.
