@@ -146,15 +146,13 @@ static int createAnonymousFile(off_t size) {
 class WaylandComponentPeer final : public ComponentPeer, private AsyncUpdater {
 public:
   WaylandComponentPeer(Component &comp, int windowStyleFlags,
-                       void * /*parentToAddTo*/)
+                       void *nativeWindowToAttachTo)
       : ComponentPeer(comp, windowStyleFlags) {
     auto *wd = WaylandDisplay::getInstance();
     if (wd != nullptr && wd->display != nullptr) {
       surface = wl_compositor_create_surface(wd->compositor);
       wl_surface_set_user_data(surface, this);
       xdgSurface = xdg_wm_base_get_xdg_surface(wd->xdg_wm_base, surface);
-      xdgToplevel = xdg_surface_get_toplevel(xdgSurface);
-
       static const struct xdg_surface_listener surface_listener = {
           [](void *data, struct xdg_surface *xdg_surf, uint32_t serial) {
             xdg_surface_ack_configure(xdg_surf, serial);
@@ -167,10 +165,16 @@ public:
 
       static const struct xdg_toplevel_listener toplevel_listener = {
           [](void *data, struct xdg_toplevel *, int32_t w, int32_t h,
-             struct wl_array *) {
+             struct wl_array *states) {
             auto *peer = static_cast<WaylandComponentPeer *>(data);
+            bool isFullscreen = false;
+            auto *state = static_cast<uint32_t *>(states->data);
+            for (size_t i = 0; i < states->size / sizeof(uint32_t); ++i) {
+              if (state[i] == XDG_TOPLEVEL_STATE_FULLSCREEN)
+                isFullscreen = true;
+            }
             if (w > 0 && h > 0)
-              peer->setBounds(Rectangle<int>(0, 0, w, h), false);
+              peer->setBounds(Rectangle<int>(0, 0, w, h), isFullscreen);
           },
           [](void *data, struct xdg_toplevel *) {
             auto *peer = static_cast<WaylandComponentPeer *>(data);
@@ -178,7 +182,45 @@ public:
           },
           [](void *, struct xdg_toplevel *, int32_t, int32_t) {},
           [](void *, struct xdg_toplevel *, struct wl_array *) {}};
-      xdg_toplevel_add_listener(xdgToplevel, &toplevel_listener, this);
+
+      if ((windowStyleFlags & windowIsTemporary) != 0) {
+        WaylandComponentPeer* parentPeer = nullptr;
+        if (nativeWindowToAttachTo != nullptr) {
+            parentPeer = static_cast<WaylandComponentPeer*>(nativeWindowToAttachTo);
+        } else if (auto* activeTop = TopLevelWindow::getActiveTopLevelWindow()) {
+            parentPeer = dynamic_cast<WaylandComponentPeer*>(activeTop->getPeer());
+        }
+
+        if (parentPeer != nullptr && parentPeer->xdgSurface != nullptr) {
+            auto *positioner = xdg_wm_base_create_positioner(wd->xdg_wm_base);
+            xdg_positioner_set_size(positioner, jmax(1, comp.getWidth()), jmax(1, comp.getHeight()));
+
+            Point<float> pf = parentPeer->globalToLocal(comp.getScreenPosition().toFloat());
+            xdg_positioner_set_anchor_rect(positioner, roundToInt(pf.x), roundToInt(pf.y), 1, 1);
+            xdg_positioner_set_anchor(positioner, XDG_POSITIONER_ANCHOR_TOP_LEFT);
+            xdg_positioner_set_gravity(positioner, XDG_POSITIONER_GRAVITY_BOTTOM_RIGHT);
+
+            xdgPopup = xdg_surface_get_popup(xdgSurface, parentPeer->xdgSurface, positioner);
+            xdg_positioner_destroy(positioner);
+
+            static const struct xdg_popup_listener popup_listener = {
+                [](void *, struct xdg_popup *, int32_t, int32_t, int32_t, int32_t) {},
+                [](void *data, struct xdg_popup *) {
+                  auto *peer = static_cast<WaylandComponentPeer *>(data);
+                  peer->handleUserClosingWindow(); // Dismiss popup
+                },
+                [](void *, struct xdg_popup *, uint32_t) {}
+            };
+            xdg_popup_add_listener(xdgPopup, &popup_listener, this);
+        } else {
+            // fallback if no parent is found
+            xdgToplevel = xdg_surface_get_toplevel(xdgSurface);
+            xdg_toplevel_add_listener(xdgToplevel, &toplevel_listener, this);
+        }
+      } else {
+        xdgToplevel = xdg_surface_get_toplevel(xdgSurface);
+        xdg_toplevel_add_listener(xdgToplevel, &toplevel_listener, this);
+      }
 
       wl_surface_commit(surface);
       wl_display_flush(wd->display);
@@ -189,6 +231,16 @@ public:
   }
 
   ~WaylandComponentPeer() override {
+    auto *wd = WaylandDisplay::getInstance();
+    if (wd != nullptr) {
+      if (wd->pointerFocus == this)
+        wd->pointerFocus = nullptr;
+      if (wd->keyboardFocus == this)
+        wd->keyboardFocus = nullptr;
+    }
+
+    if (xdgPopup != nullptr)
+      xdg_popup_destroy(xdgPopup);
     if (buffer != nullptr)
       wl_buffer_destroy(buffer);
     if (xdgToplevel != nullptr)
@@ -217,10 +269,23 @@ public:
   }
 
   void setVisible(bool) override {}
-  void setTitle(const String &) override {}
-  void setMinimised(bool) override {}
+  void setTitle(const String &title) override {
+    if (xdgToplevel)
+      xdg_toplevel_set_title(xdgToplevel, title.toRawUTF8());
+  }
+  void setMinimised(bool b) override {
+    if (xdgToplevel) {
+      if (b) xdg_toplevel_set_minimized(xdgToplevel);
+    }
+  }
   bool isMinimised() const override { return false; }
   void setFullScreen(bool shouldBeFullScreen) override {
+    if (xdgToplevel) {
+      if (shouldBeFullScreen)
+        xdg_toplevel_set_fullscreen(xdgToplevel, nullptr);
+      else
+        xdg_toplevel_unset_fullscreen(xdgToplevel);
+    }
     fullScreen = shouldBeFullScreen;
   }
   bool isFullScreen() const override { return fullScreen; }
@@ -342,6 +407,7 @@ private:
   wl_surface *surface = nullptr;
   xdg_surface *xdgSurface = nullptr;
   xdg_toplevel *xdgToplevel = nullptr;
+  xdg_popup *xdgPopup = nullptr;
   wl_buffer *buffer = nullptr;
 
   TimedCallback vBlankManager { [this]() { onVBlank(); } };
