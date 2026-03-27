@@ -119,6 +119,7 @@ public:
   WaylandComponentPeer *pointerFocus = nullptr;
   Point<float> pointerPos;
   ModifierKeys currentModifiers;
+  uint32_t pointerSerial = 0;
 
   xkb_context* xkbContext = nullptr;
   xkb_keymap* xkbKeymap = nullptr;
@@ -133,7 +134,7 @@ public:
 
 //==============================================================================
 static int createAnonymousFile(off_t size) {
-  int fd = fileno(tmpfile());
+  int fd = memfd_create("juce-wayland-shm", MFD_CLOEXEC);
   if (fd >= 0) {
     if (ftruncate(fd, size) < 0) {
       close(fd);
@@ -174,7 +175,7 @@ public:
                 isFullscreen = true;
             }
             if (w > 0 && h > 0)
-              peer->setBounds(Rectangle<int>(0, 0, w, h), isFullscreen);
+              peer->setBounds(Rectangle<int>(peer->getBounds().getX(), peer->getBounds().getY(), w, h), isFullscreen);
           },
           [](void *data, struct xdg_toplevel *) {
             auto *peer = static_cast<WaylandComponentPeer *>(data);
@@ -273,6 +274,44 @@ public:
     if (xdgToplevel)
       xdg_toplevel_set_title(xdgToplevel, title.toRawUTF8());
   }
+  void startHostManagedResize(Point<int>, ResizableBorderComponent::Zone zone) override {
+    if (xdgToplevel == nullptr) return;
+    auto *wd = WaylandDisplay::getInstance();
+    if (wd->pointerFocus != this || wd->seat == nullptr) return;
+
+    uint32_t edge = XDG_TOPLEVEL_RESIZE_EDGE_NONE;
+    if (zone.isDraggingTopEdge() && zone.isDraggingLeftEdge())
+      edge = XDG_TOPLEVEL_RESIZE_EDGE_TOP_LEFT;
+    else if (zone.isDraggingTopEdge() && zone.isDraggingRightEdge())
+      edge = XDG_TOPLEVEL_RESIZE_EDGE_TOP_RIGHT;
+    else if (zone.isDraggingBottomEdge() && zone.isDraggingLeftEdge())
+      edge = XDG_TOPLEVEL_RESIZE_EDGE_BOTTOM_LEFT;
+    else if (zone.isDraggingBottomEdge() && zone.isDraggingRightEdge())
+      edge = XDG_TOPLEVEL_RESIZE_EDGE_BOTTOM_RIGHT;
+    else if (zone.isDraggingTopEdge())
+      edge = XDG_TOPLEVEL_RESIZE_EDGE_TOP;
+    else if (zone.isDraggingBottomEdge())
+      edge = XDG_TOPLEVEL_RESIZE_EDGE_BOTTOM;
+    else if (zone.isDraggingLeftEdge())
+      edge = XDG_TOPLEVEL_RESIZE_EDGE_LEFT;
+    else if (zone.isDraggingRightEdge())
+      edge = XDG_TOPLEVEL_RESIZE_EDGE_RIGHT;
+
+    if (edge != XDG_TOPLEVEL_RESIZE_EDGE_NONE)
+      xdg_toplevel_resize(xdgToplevel, wd->seat, wd->pointerSerial, edge);
+  }
+
+  bool startHostManagedMove() override {
+    if (xdgToplevel != nullptr) {
+      auto *wd = WaylandDisplay::getInstance();
+      if (wd->pointerFocus == this && wd->seat != nullptr) {
+        xdg_toplevel_move(xdgToplevel, wd->seat, wd->pointerSerial);
+        return true;
+      }
+    }
+    return false;
+  }
+
   void setMinimised(bool b) override {
     if (xdgToplevel) {
       if (b) xdg_toplevel_set_minimized(xdgToplevel);
@@ -581,9 +620,10 @@ const int KeyPress::rewindKey = ((int)0xffeeff03) | Keys::extendedKeyModifier;
 
 //==============================================================================
 static const struct wl_pointer_listener pointer_listener = {
-    [](void *data, struct wl_pointer *, uint32_t, struct wl_surface *surface,
+    [](void *data, struct wl_pointer *, uint32_t serial, struct wl_surface *surface,
        wl_fixed_t fx, wl_fixed_t fy) {
       auto *d = static_cast<WaylandDisplay *>(data);
+      d->pointerSerial = serial;
       if (surface)
         d->pointerFocus = static_cast<WaylandComponentPeer *>(
             wl_surface_get_user_data(surface));
@@ -616,9 +656,10 @@ static const struct wl_pointer_listener pointer_listener = {
             d->currentModifiers, 0.0f, 0.0f,
             Time::getCurrentTime().toMilliseconds(), {}, false);
     },
-    [](void *data, struct wl_pointer *, uint32_t, uint32_t, uint32_t button,
+    [](void *data, struct wl_pointer *, uint32_t serial, uint32_t, uint32_t button,
        uint32_t state) {
       auto *d = static_cast<WaylandDisplay *>(data);
+      d->pointerSerial = serial;
       int modifier = 0;
       if (button == 0x110)
         modifier = ModifierKeys::leftButtonModifier;

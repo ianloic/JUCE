@@ -619,6 +619,10 @@ void ResizableWindow::mouseDown (const MouseEvent& e)
 {
     if (canDrag && ! isFullScreen())
     {
+        if (auto* peer = getPeer())
+            if (peer->startHostManagedMove())
+                return;
+
         dragStarted = true;
         dragger.startDraggingComponent (this, e);
     }

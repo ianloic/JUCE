@@ -280,6 +280,11 @@ public:
     virtual void startHostManagedResize ([[maybe_unused]] Point<int> mouseDownPosition,
                                          [[maybe_unused]] ResizableBorderComponent::Zone zone) {}
 
+    /** Asks the window-manager to natively begin moving this window.
+        Returns true if the OS successfully took over the drag operation.
+    */
+    virtual bool startHostManagedMove() { return false; }
+
     /** Returns the current constrainer, if one has been set. */
     ComponentBoundsConstrainer* getConstrainer() const noexcept             { return constrainer; }
 
